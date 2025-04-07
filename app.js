@@ -6,14 +6,15 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 
 
-var indexRouter = require('./routes/index');
+
+
 var usersRouter = require('./routes/users');
 
 var app = express();
 
 mongoose.connect("mongodb://localhost:27017/c2");
 mongoose.connection.on("connected",()=>{
-  console.log("connected");
+  console.log("Kết nối thành công đến MongoDB");
 })
 const PORT = 3000;
 app.listen(PORT, () => {
@@ -24,7 +25,7 @@ const cors = require('cors');
 
 // Kích hoạt CORS cho tất cả các domain
 app.use(cors());
-111
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,12 +37,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/roles', require('./routes/roles'));
-app.use('/auth', require('./routes/auth'));
+app.use('/auths', require('./routes/auths'));
 app.use('/rooms', require('./routes/rooms'));
 app.use('/bookings', require('./routes/bookings'));
+app.use('/services', require('./routes/services'));
+app.use('/floors', require('./routes/floors'));
+app.use('/invoices', require('./routes/invoices'));
+app.use('/hotels', require('./routes/hotels'));
+app.use('/servicesBills', require('./routes/servicesBills'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

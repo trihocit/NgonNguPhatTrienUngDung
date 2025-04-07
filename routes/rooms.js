@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const roomController = require("../controllers/rooms");
+const { checkAuthAndRole } = require("../Utils/check_permission");
 
 // Lấy danh sách tất cả phòng
 router.get("/", async (req, res) => {
@@ -26,7 +27,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Tạo phòng mới
-router.post("/", async (req, res) => {
+router.post("/", checkAuthAndRole("Admin"), async (req, res) => {
     try {
         const { name, type, price, amenities, hotelId, isAvailable } = req.body;
         const newRoom = await roomController.createRoom(name, type, price, amenities, hotelId, isAvailable);

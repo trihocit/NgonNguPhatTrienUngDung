@@ -6,6 +6,7 @@ let BuildQueries = require('../Utils/BuildQuery');
 let { check_authentication } = require('../Utils/check_auth');
 let jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const constants = require('../Utils/constants');
 
 // Lấy danh sách người dùng
 router.get('/', async function(req, res, next) {
@@ -112,9 +113,9 @@ router.post('/login', async function(req, res, next) {
 
     // Tạo JWT token
     const token = jwt.sign(
-      { userId: user._id, username: user.username, role: user.role }, 
-      'your_jwt_secret', 
-      { expiresIn: '1h' } // Token hết hạn sau 1 giờ
+      { id: user._id },
+      constants.SECRET_KEY,
+      { expiresIn: '30m' } // Token hết hạn sau 30 phút
     );
 
     // Trả về token cho người dùng

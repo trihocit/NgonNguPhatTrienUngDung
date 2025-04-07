@@ -32,35 +32,43 @@ module.exports = {
             throw error;
         }
     },
-    
 
     // Lấy tất cả đặt phòng của người dùng
     getUserBookings: async function(userId) {
-        return await Booking.find({ userId }).populate('roomId');
+        try {
+            return await Booking.find({ userId }).populate('roomId');
+        } catch (error) {
+            throw error;
+        }
     },
 
     // Hủy đặt phòng
     cancelBooking: async function(bookingId) {
-        let booking = await Booking.findById(bookingId);
-        if (!booking) {
-            throw new Error("Đặt phòng không tồn tại");
-        }
+        try {
+            let booking = await Booking.findById(bookingId);
+            if (!booking) {
+                throw new Error("Đặt phòng không tồn tại");
+            }
 
-        booking.status = "cancelled";
-        await booking.save();
-        return booking;
+            booking.status = "cancelled";
+            await booking.save();
+            return booking;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Cập nhật thông tin đặt phòng theo ID
+    updateBooking: async function(id, updateData) {
+        try {
+            // Tìm đặt phòng theo ID và cập nhật thông tin
+            const updatedBooking = await Booking.findByIdAndUpdate(id, updateData, { new: true }).populate("roomId userId");
+            if (!updatedBooking) {
+                throw new Error("Đặt phòng không tồn tại");
+            }
+            return updatedBooking;
+        } catch (error) {
+            throw error;
+        }
     }
 };
-// Cập nhật thông tin đặt phòng theo ID
-async function updateBooking(bookingId, updateData) {
-    try {
-      // Tìm đặt phòng theo ID và cập nhật thông tin
-      const updatedBooking = await bookingSchema.findByIdAndUpdate(bookingId, updateData, { new: true }).populate("roomId userId");
-      if (!updatedBooking) {
-        throw new Error("Booking not found");
-      }
-      return updatedBooking;
-    } catch (error) {
-      throw error;
-    }
-  }
